@@ -9,7 +9,16 @@ const AuthContext = React.createContext({
 export const AuthContextProvider = (props) => {
   const [ isLoggedIn, setIsLoggedIn ] = useState(false)
 
+  useEffect(() => {
+    const userLoginStatus = localStorage.getItem("isLoggedIn")
+  
+    if (userLoginStatus === "1") {
+      setIsLoggedIn(true)
+    }
+  }, []) 
+
   const loginHandler = () => {
+    localStorage.setItem("isLoggedIn" , "1")
     setIsLoggedIn(true)
   }
 
@@ -17,6 +26,16 @@ export const AuthContextProvider = (props) => {
     localStorage.removeItem("isLoggedIn")
     setIsLoggedIn(false)
   }
+
+  return  <AuthContext.Provider
+    value={{
+      isLoggedIn,
+      onLogout: logoutHandler,
+      onLogin: loginHandler
+    }}
+    >
+      {props.children} 
+    </AuthContext.Provider>
 
 }
 
